@@ -1,0 +1,30 @@
+---
+description: Layout do monorepo, pnpm e comandos da raiz
+alwaysApply: true
+---
+
+# Monorepo code-connect
+
+Workspace pnpm (`pnpm-workspace.yaml`: `apps/*`). Dois pacotes:
+
+- `web` em `apps/web` — React 19 + Vite 8
+- `api` em `apps/api` — NestJS 12
+
+Gerenciador fixo: pnpm 12 (`packageManager` na raiz). Instale na raiz com `pnpm install`. Não use npm nem yarn e não crie `package-lock.json`.
+
+Rode pela raiz, com os scripts que já filtram o pacote:
+
+```bash
+pnpm web:dev      # Vite
+pnpm api:dev      # Nest em watch
+pnpm web:build
+pnpm api:build
+pnpm api:test
+pnpm api:test:e2e
+```
+
+Novo script de app entra no `package.json` da raiz como `pnpm --filter <nome> <script>`. Não entre em `apps/*` para instalar ou para criar um Git interno: um único repositório na raiz.
+
+Não edite `dist/`, `node_modules/` nem `pnpm-lock.yaml` à mão. Cada app mantém o próprio `.gitignore`; não apague esses arquivos.
+
+TypeScript 6 nos dois apps, com config diferente. Siga a regra da stack do arquivo em que estiver mexendo; não unifique `tsconfig`, aspas ou ponto e vírgula entre `web` e `api`.

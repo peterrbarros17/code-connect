@@ -1,0 +1,42 @@
+---
+description: API REST no NestJS em apps/api
+globs:
+  - apps/api/**/*.ts
+alwaysApply: false
+---
+
+# REST
+
+Cada controller representa um recurso, substantivo no plural: `@Controller('users')`. A URL identifica o recurso. Ação fica no método HTTP, não no path.
+
+| Intenção | Método | Sucesso |
+|---|---|---|
+| listar / ler | `GET` | 200 |
+| criar | `POST` | 201 |
+| substituir | `PUT` | 200 |
+| atualizar parcial | `PATCH` | 200 |
+| remover | `DELETE` | 204 |
+
+`GET`, `PUT` e `DELETE` são idempotentes. Filtro, ordenação e página vão na query (`GET /users?page=1&limit=20`). Sub-recurso só quando a composição é real: `GET /users/:userId/posts`.
+
+Pedido carrega tudo o que a operação precisa. Não guarde estado de cliente no servidor entre requests.
+
+Corpo de erro sai das exceptions do Nest (`NotFoundException`, `BadRequestException`, `ConflictException`), com o status correspondente. Recurso ausente responde 404. Validação inválida responde 400. Conflito de estado responde 409.
+
+Entrada via DTO. A resposta é a representação do recurso, sem segredo nem campo interno de persistência.
+
+```ts
+@Controller('users')
+export class UsersController {
+  @Post()
+  @HttpCode(201)
+  create(@Body() dto: CreateUserDto): Promise<UserResponse> {
+    return this.usersService.create(dto);
+  }
+
+  @Get(':id')
+  findOne(@Param('id') id: string): Promise<UserResponse> {
+    return this.usersService.findOne(id);
+  }
+}
+```

@@ -1,0 +1,36 @@
+---
+description: Convenções do app React com Vite em apps/web
+globs:
+  - apps/web/**/*.ts
+  - apps/web/**/*.tsx
+  - apps/web/**/*.css
+alwaysApply: false
+---
+
+# Web (React 19 + Vite 8)
+
+Código em `apps/web/src`. `src/main.tsx` monta `<App />` em `#root` com `StrictMode`.
+
+- Componentes funcionais e hooks do React. Novo componente entra na pasta do Atomic Design e sai com teste do uso essencial.
+- Visual com classes Tailwind no JSX. `src/index.css` fica só com o import global do Tailwind e tokens.
+- Estilo do template: aspas simples, sem ponto e vírgula.
+- `tsconfig.app.json`: `verbatimModuleSyntax`, `jsx: react-jsx`, `noUnusedLocals`, `noUnusedParameters`. Tipos com `import type`. Imports relativos de código usam extensão `.ts`/`.tsx`, como em `main.tsx`.
+- Lint: `pnpm web:lint` (oxlint com plugins `react`, `typescript`, `oxc`). `react/rules-of-hooks` é erro.
+- Build: `pnpm web:build` (`tsc -b && vite build`). Não troque Vite nem oxlint por ESLint.
+
+```tsx
+import { useState } from 'react'
+
+export default function Panel() {
+  const [open, setOpen] = useState(false)
+  return (
+    <button
+      type="button"
+      className="rounded bg-slate-900 px-3 py-2 text-white"
+      onClick={() => setOpen((value) => !value)}
+    >
+      {open ? 'Fechar' : 'Abrir'}
+    </button>
+  )
+}
+```

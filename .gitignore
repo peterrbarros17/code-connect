@@ -1,0 +1,40 @@
+# dependencies
+node_modules
+.pnpm-store
+
+# build output
+dist
+dist-ssr
+build
+coverage
+*.tsbuildinfo
+
+# logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# env
+.env
+.env.*
+!.env.example
+*.local
+
+# OS
+.DS_Store
+
+# editors
+.idea
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# temp
+.temp
+.tmp

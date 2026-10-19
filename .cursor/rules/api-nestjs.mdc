@@ -1,0 +1,23 @@
+---
+description: Convenções da API NestJS em apps/api
+globs:
+  - apps/api/**/*.ts
+alwaysApply: false
+---
+
+# API (NestJS 12, ESM)
+
+Código em `apps/api/src`. Unitário: `*.spec.ts` ao lado da classe. E2E: `apps/api/test/*.e2e-spec.ts`.
+
+- Feature em módulo, controller e service. Registre controller e provider no `@Module`.
+- `module: nodenext`. Import relativo termina em `.js`, inclusive em arquivo `.ts`:
+
+```ts
+import { AppService } from './app.service.js';
+```
+
+- Decorators ativos (`experimentalDecorators`, `emitDecoratorMetadata`). `strict` ligado; `strictPropertyInitialization` desligado. Não reative essa flag sem ajustar as classes.
+- Prettier (`.prettierrc`): aspas simples e `trailingComma: all`. Formate com `pnpm api:format`. Mantenha ponto e vírgula, como o código gerado.
+- Lint: `pnpm api:lint` (oxlint type-aware em `src/` e `test/`). `typescript/no-floating-promises` é erro: dê `await` ou trate a promise.
+- Testes com Vitest (`globals: true`), não Jest. `pnpm api:test` inclui `**/*.spec.ts`; `pnpm api:test:e2e` inclui `**/*.e2e-spec.ts`. Monte o app com `@nestjs/testing`.
+- Porta: `process.env.PORT ?? 3000` em `main.ts`. Resource padrão sai do Nest CLI (`nest g`), não de um arquivo solto fora do módulo.

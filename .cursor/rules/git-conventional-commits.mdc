@@ -1,0 +1,33 @@
+---
+description: Conventional Commits para web e api
+alwaysApply: true
+---
+
+# Conventional Commits
+
+Mensagem de commit, nos dois apps e na raiz:
+
+```
+<tipo>(<escopo>): <descrição>
+```
+
+Tipos: `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`, `revert`.
+
+Escopo: `web`, `api` ou `repo` (raiz, workspace, regras). Omita o escopo só quando a mudança não tem um pacote.
+
+Descrição no imperativo, curta, sem ponto final.
+
+```
+feat(web): adiciona atom de botão
+fix(api): responde 404 quando o usuário não existe
+test(web): cobre o clique do botão salvar
+chore(repo): registra o atalho web:test
+```
+
+Mudança incompatível leva `!` depois do escopo ou o rodapé `BREAKING CHANGE:`.
+
+```
+feat(api)!: troca o corpo de POST /users
+
+BREAKING CHANGE: o campo name passa a ser obrigatório.
+```

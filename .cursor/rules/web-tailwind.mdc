@@ -1,0 +1,28 @@
+---
+description: Tailwind CSS no app React em apps/web
+globs:
+  - apps/web/**/*.tsx
+  - apps/web/**/*.css
+alwaysApply: false
+---
+
+# Tailwind
+
+Estilize no JSX com classes utilitárias do Tailwind. Antes do primeiro componente novo, o app precisa ter Tailwind ligado no Vite (`@tailwindcss/vite`) e `@import "tailwindcss"` em `src/index.css`.
+
+- Tokens e overrides globais ficam em `src/index.css` (`@theme`).
+- Componente novo não ganha arquivo `.css` próprio.
+- Estado visual (hover, focus, disabled, responsive) usa variantes do Tailwind: `hover:`, `focus-visible:`, `disabled:`, `md:`.
+
+```tsx
+export function Button({ label }: { label: string }) {
+  return (
+    <button
+      type="button"
+      className="rounded-md bg-slate-900 px-3 py-2 text-sm text-white hover:bg-slate-700 focus-visible:outline-2"
+    >
+      {label}
+    </button>
+  )
+}
+```

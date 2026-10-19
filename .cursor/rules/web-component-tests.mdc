@@ -1,0 +1,33 @@
+---
+description: Teste obrigatório de uso essencial para cada componente React
+globs:
+  - apps/web/**/*.tsx
+alwaysApply: false
+---
+
+# Testes de componente
+
+Todo componente exportado em `src/components` e `src/pages` sai com um teste ao lado: `Button/Button.test.tsx`. Componente sem esse arquivo está incompleto.
+
+Runner: Vitest + React Testing Library + `@testing-library/user-event`. Script `test` em `apps/web` e atalho `web:test` na raiz (`pnpm --filter web test`).
+
+O teste cobre o uso essencial, pela perspectiva de quem usa a tela:
+
+- renderiza o papel ou o texto principal
+- executa a ação principal quando o componente é interativo (clique, submit, digitação)
+
+Consulta por role, label ou texto. Não use snapshot como único teste e não assert em estado interno.
+
+```tsx
+import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { Button } from './Button'
+
+it('dispara a ação ao clique', async () => {
+  const user = userEvent.setup()
+  const onClick = vi.fn()
+  render(<Button label="Salvar" onClick={onClick} />)
+  await user.click(screen.getByRole('button', { name: 'Salvar' }))
+  expect(onClick).toHaveBeenCalledOnce()
+})
+```

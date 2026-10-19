@@ -1,0 +1,22 @@
+---
+description: Atomic Design no app React em apps/web
+globs:
+  - apps/web/**/*.tsx
+alwaysApply: false
+---
+
+# Atomic Design
+
+Cada componente novo entra em um único nível:
+
+| Nível | Pasta | O que é |
+|---|---|---|
+| Atom | `src/components/atoms` | elemento indivisível (botão, input, label) |
+| Molecule | `src/components/molecules` | dois ou mais atoms com uma função |
+| Organism | `src/components/organisms` | bloco de interface (header, formulário) |
+| Template | `src/components/templates` | layout, sem dado real |
+| Page | `src/pages` | tela que compõe os níveis de baixo |
+
+Um nível importa só níveis abaixo. Atom não importa molecule, organism, template nem page.
+
+Arquivo em PascalCase, um componente por arquivo: `src/components/atoms/Button/Button.tsx`. O teste fica na mesma pasta.
