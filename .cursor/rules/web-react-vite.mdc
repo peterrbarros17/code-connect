@@ -11,6 +11,9 @@ Código em `apps/web/src`. `src/main.tsx` monta `<App />` em `#root` com `Strict
 - `tsconfig.app.json`: `verbatimModuleSyntax`, `jsx: react-jsx`, `noUnusedLocals`, `noUnusedParameters`. Tipos com `import type`. Imports relativos de código usam extensão `.ts`/`.tsx`, como em `main.tsx`.
 - Lint: `pnpm web:lint` (oxlint com plugins `react`, `typescript`, `oxc`). `react/rules-of-hooks` é erro.
 - Build: `pnpm web:build` (`tsc -b && vite build`). Não troque Vite nem oxlint por ESLint.
+- `apps/web/index.html` é o template do documento: `title`, `meta description` e as relações de link do manifesto ARD. Ver `web-seo-agentic.mdc`.
+- `apps/web/public/` guarda arquivo estático servido na raiz e copiado para `dist/`. Nada de `public/` dentro de `src/`.
+- Conferir o build de produção: `pnpm web:preview` (porta 4173). O dev server serve o React sem minificar.
 
 ```tsx
 import { useState } from 'react'

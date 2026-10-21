@@ -1,0 +1,59 @@
+---
+description: Auditoria Lighthouse, Core Web Vitals e CLS no app web
+globs:
+  - apps/web/**/*.tsx
+  - apps/web/index.html
+alwaysApply: false
+---
+
+# Lighthouse e Core Web Vitals
+
+## Como medir
+
+```bash
+pnpm dlx lighthouse http://localhost:5173/login --view
+```
+
+O painel do DevTools roda em modo *snapshot*: não coleta trace, a categoria Performance sai 0
+sem que haja erro no código. Meça Performance no modo *navigation* (CLI, acima) e sempre contra
+o build de produção:
+
+```bash
+pnpm web:build && pnpm web:preview   # http://localhost:4173
+```
+
+O dev server entrega o React sem minificar (4 MB de JS) e distorce toda métrica. Os dois
+servidores juntos são o mesmo app, então as categorias de SEO, acessibilidade e descoberta por
+agentes podem ser conferidas no dev server, que é mais rápido de reiniciar.
+
+## Imagem com tamanho explícito
+
+Todo `<img>` leva `width` e `height` com o tamanho intrínseco do arquivo. O audit
+`unsized-images` reprova quando o tamanho vem só do CSS e o valor é `auto`:
+
+```tsx
+// reprovado: altura vem do CSS como `auto`
+<img src="/Logo/Logo_Large.svg" alt="Code Connect" className="h-auto w-32" />
+
+// aprovado: atributo com o tamanho intrínseco do arquivo (352x111)
+<img
+  src="/Logo/Logo_Large.svg"
+  alt="Code Connect"
+  width={352}
+  height={111}
+  className="h-auto w-32"
+/>
+```
+
+Com `width`/`height` no HTML, o navegador reserva o espaço antes do download e o CLS cai para
+0 mesmo com `w-*`/`h-*` no Tailwind. `size-*` (largura e altura fixas) também satisfaz o
+audit. Imagem com `position: absolute` ou `fixed` é ignorada pelo audit, mas ganha as
+dimensões do mesmo jeito.
+
+Todo `<img>` tem `alt` (texto alternativo ou `alt=""` para decorativa).
+
+## Antes de fechar a tarefa
+
+Rode o Lighthouse de novo e confirme as cinco categorias: performance, acessibilidade,
+boas práticas, SEO e descoberta por agentes. Se algo reprovar, o nome do audit vem no relatório
+JSON (`audits.<id>.score`).

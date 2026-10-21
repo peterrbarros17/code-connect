@@ -19,6 +19,8 @@ pnpm web:dev      # Vite
 pnpm api:dev      # Nest em watch
 pnpm web:build
 pnpm api:build
+pnpm web:preview  # build de produção em http://localhost:4173
+pnpm web:lint
 pnpm web:test
 pnpm web:test:a11y
 pnpm api:test

@@ -13,6 +13,7 @@ Estilize no JSX com classes utilitárias do Tailwind. Antes do primeiro componen
 - Tokens e overrides globais ficam em `src/index.css` (`@theme`).
 - Componente novo não ganha arquivo `.css` próprio.
 - Estado visual (hover, focus, disabled, responsive) usa variantes do Tailwind: `hover:`, `focus-visible:`, `disabled:`, `md:`.
+- Imagem no JSX: `<img>` sempre com `width` e `height` explícitos (tamanho intrínseco do arquivo) e classe `size-*`/`w-*` para o layout. `h-auto` sozinho não dimensionaliza a imagem e reprova o audit `unsized-images` do Lighthouse (ver `web-lighthouse.mdc`).
 
 ## Tamanho de fonte
 

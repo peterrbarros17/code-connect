@@ -1,0 +1,63 @@
+---
+description: SEO e descoberta por agentes de IA no app web
+globs:
+  - apps/web/index.html
+  - apps/web/public/**
+alwaysApply: false
+---
+
+# SEO e descoberta por agentes de IA
+
+O site precisa responder em rotas fixas que o Lighthouse e os agentes de IA consultam. Todas
+vivem em `apps/web/public/`, são servidas na raiz e copiadas para `dist/` no build.
+
+| Arquivo | Rota | Auditor |
+|---|---|---|
+| `public/robots.txt` | `/robots.txt` | `robots-txt` |
+| `public/llms.txt` | `/llms.txt` | `llms-txt` |
+| `public/.well-known/ai-catalog.json` | `/.well-known/ai-catalog.json` | `ard-schema` |
+| `public/.well-known/ard.json` | `/.well-known/ard.json` | `ard-schema` (Lighthouse novo) |
+
+Sem esses arquivos o servidor devolve o `index.html` (fallback de SPA) e o auditor reprova com
+`Syntax not understood` ou `Malformed JSON in manifest`. Não vale a pena "resolver" com um 404:
+o fallback de SPA responde 200 com HTML.
+
+## Manifesto ARD
+
+- Um conteúdo, dois caminhos. O Lighthouse 13.x procura `ai-catalog.json`; as versões mais
+  novas aceitam `ard.json` e `rel="ard"`. Ao editar um, replique no outro.
+- `specVersion` é `"1.0"` e `entries` é obrigatório. Não coloque `collections` no topo.
+- Cada entry: `identifier` no formato `urn:air:<publisher>:<namespace>:<nome>`, `displayName`,
+  `type` (`application/agent-card+json`) e exatamente um de `url` ou `data`.
+- `representativeQueries` leva de 2 a 5 itens. Fora dessa faixa vira warning e derruba o score.
+- `type` fora da lista padrão da spec também é warning. Fique nos tipos padrão.
+- O manifesto é declarado no `index.html` com `<link rel="ard">` e `<link rel="ai-catalog">`.
+
+```html
+<link rel="ard" href="/.well-known/ard.json" type="application/ai-catalog+json" />
+<link rel="ai-catalog" href="/.well-known/ai-catalog.json" type="application/ai-catalog+json" />
+```
+
+- Não use `Agentmap:` no `robots.txt`. A diretiva não é padrão e reprova o audit `robots-txt`
+  com `Unknown directive`.
+
+```txt
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+```
+
+## Cabeçalho do documento
+
+- `<meta name="description">` é obrigatório (audit `meta-description`). Um por rota, com
+  texto que descreva a tela em português.
+- `<title>` por rota e único na página.
+- Fonte externa não bloqueia renderização: `preload` + `media="print"` com `onload` trocando
+  para `all`, e `<noscript>` com o `<link rel="stylesheet">` normal. Com `display=swap` o texto
+  já aparece com a fonte de fallback.
+
+## llms.txt
+
+Markdown com um H1 (`# Título`) e pelo menos um link (`[rótulo](url)`). Descreve o site em
+linguagem natural, em português, com os links das rotas principais. Link relativo (`/login`)
+funciona e dispensa saber o domínio.

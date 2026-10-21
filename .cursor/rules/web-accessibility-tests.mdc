@@ -26,3 +26,5 @@ Ao criar uma tela:
 Para levantar os problemas sem reprovar: `pnpm web:test:a11y:report`.
 
 O axe-core cobre cerca de 60% dos critérios do WCAG. O que fica para revisão manual: 1.4.1 (uso de cor), 2.4.6 (rótulos descritivos), 3.3.2 (instruções), 2.5.3 (nome do usuário) e o texto alternativo que depende do contexto.
+
+O audit de acessibilidade do Lighthouse (ver `web-lighthouse.mdc`) é complemento, não substituto: roda outro axe-core e não cobre `::placeholder` nem `oklab()`. Problema conhecido da suíte fica registrado no README do app, em "Problemas conhecidos".
