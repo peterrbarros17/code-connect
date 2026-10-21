@@ -3,5 +3,13 @@ type LogoProps = {
 }
 
 export function Logo({ className = '' }: LogoProps) {
-  return <img src="/Logo/Logo_Large.svg" alt="Code Connect" className={`h-auto w-32 ${className}`} />
+  return (
+    <img
+      src="/Logo/Logo_Large.svg"
+      alt="Code Connect"
+      width={352}
+      height={111}
+      className={`h-auto w-32 ${className}`}
+    />
+  )
 }

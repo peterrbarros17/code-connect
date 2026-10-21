@@ -4,12 +4,39 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Code Connect: entre na sua conta ou crie seu cadastro com e-mail e senha, ou entre por uma rede social."
+    />
+    <link rel="ard" href="/.well-known/ard.json" type="application/ai-catalog+json" />
+    <link
+      rel="ai-catalog"
+      href="/.well-known/ai-catalog.json"
+      type="application/ai-catalog+json"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!--
+      A folha de estilo do Google Fonts não deve bloquear a renderização: com `display=swap`
+      o texto já aparece com a fonte de fallback enquanto o arquivo é baixado.
+    -->
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap"
+    />
     <link
       href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
+    <noscript>
+      <link
+        href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap"
+        rel="stylesheet"
+      />
+    </noscript>
     <title>Code Connect</title>
   </head>
   <body>

@@ -1,0 +1,32 @@
+{
+  "specVersion": "1.0",
+  "entries": [
+    {
+      "identifier": "urn:air:github.com:peterrbarros17:code-connect",
+      "displayName": "Code Connect",
+      "type": "application/agent-card+json",
+      "description": "Aplicação web de autenticação com login e cadastro por e-mail e senha, além de entrada por provedor social.",
+      "capabilities": ["LoginForm", "RegisterForm", "SocialLogin"],
+      "representativeQueries": [
+        "como entrar na minha conta",
+        "criar um novo cadastro de usuário",
+        "fazer login com Google ou GitHub"
+      ],
+      "tags": ["autenticacao", "login", "cadastro", "react", "nestjs"],
+      "version": "0.0.0",
+      "updatedAt": "2026-10-21T00:00:00Z",
+      "data": {
+        "name": "Code Connect",
+        "version": "0.0.0",
+        "url": "https://github.com/peterrbarros17/code-connect",
+        "description": "Aplicação web de autenticação com login e cadastro por e-mail e senha, além de entrada por provedor social.",
+        "capabilities": {
+          "login": "Autentica um usuário já cadastrado por e-mail e senha.",
+          "register": "Cria um novo cadastro de usuário.",
+          "socialLogin": "Inicia o login por provedor social (Google ou GitHub)."
+        },
+        "tags": ["autenticacao", "login", "cadastro"]
+      }
+    }
+  ]
+}

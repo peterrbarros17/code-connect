@@ -1,0 +1,25 @@
+# Code Connect
+
+> Code Connect é a aplicação web de autenticação deste projeto: login e cadastro de
+> usuários por e-mail e senha, com entrada opcional por provedor social. A interface é
+> em português (pt-BR) e foi construída com React 19, Vite 8 e Tailwind CSS 4, apoiada
+> por uma API REST em NestJS 12.
+
+## Páginas
+
+- [Login](/login): autenticação de quem já tem conta, com validação de e-mail e senha e
+  atalhos para o login social.
+- [Cadastro](/cadastro): criação de um novo cadastro, com confirmação de senha e os
+  mesmos atalhos de login social.
+
+## Recursos técnicos
+
+- [Repositório no GitHub](https://github.com/peterrbarros17/code-connect): código-fonte
+  do front-end (React + Vite) e da API (NestJS).
+- [Manifesto ARD](/.well-known/ard.json): descrição do recurso em formato Agentic
+  Resource Discovery, para que agentes de IA descubram e verifiquem a aplicação.
+
+## Acessibilidade
+
+A interface é verificada contra o WCAG 2.0/2.1/2.2 nos níveis A e AA com axe-core e
+Playwright, incluindo contraste de cor, foco visível e navegação completa por teclado.
