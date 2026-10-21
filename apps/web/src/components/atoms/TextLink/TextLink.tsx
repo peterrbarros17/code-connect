@@ -9,7 +9,7 @@ type TextLinkProps = {
 }
 
 const variants = {
-  underline: 'text-base text-offwhite underline underline-offset-2 hover:text-accent',
+  underline: 'text-base text-content underline underline-offset-2 hover:text-accent',
   accent: 'text-xl text-accent hover:brightness-90',
 }
 

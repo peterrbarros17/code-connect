@@ -14,12 +14,24 @@ Estilize no JSX com classes utilitárias do Tailwind. Antes do primeiro componen
 - Componente novo não ganha arquivo `.css` próprio.
 - Estado visual (hover, focus, disabled, responsive) usa variantes do Tailwind: `hover:`, `focus-visible:`, `disabled:`, `md:`.
 
+## Tamanho de fonte
+
+Use sempre o token de tamanho padrão do Tailwind mais próximo do desenho: `text-xs` (12), `text-sm` (14), `text-base` (16), `text-lg` (18), `text-xl` (20), `text-2xl` (24), `text-3xl` (30), `text-4xl` (36). Nada de `text-[18px]`: se o tamanho pedido estiver fora da escala, fica no vizinho mais próximo em vez de criar valor customizado.
+
+## Cor
+
+Hexadecimal vive só no `@theme` de `src/index.css`. No JSX use sempre token de cor, nunca `bg-[#171d1f]`.
+
+- Paleta da marca: `brand-50` … `brand-950`.
+- Paleta de fundo escuro: `ink-50` … `ink-950`.
+- Papéis semânticos (preferidos no JSX): `page`, `surface`, `accent`, `accent-contrast`, `content`, `content-muted`, `content-subtle`, `field`, `field-text`.
+
 ```tsx
 export function Button({ label }: { label: string }) {
   return (
     <button
       type="button"
-      className="rounded-md bg-slate-900 px-3 py-2 text-sm text-white hover:bg-slate-700 focus-visible:outline-2"
+      className="rounded-md bg-surface px-3 py-2 text-sm text-content hover:bg-ink-800 focus-visible:outline-2"
     >
       {label}
     </button>

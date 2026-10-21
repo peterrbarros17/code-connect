@@ -3,16 +3,54 @@
 @theme {
   --font-sans: 'Prompt', system-ui, sans-serif;
 
-  --color-page: #00090e;
-  --color-surface: #171d1f;
-  --color-accent: #81fe88;
-  --color-accent-dark: #132e35;
-  --color-field: #888888;
-  --color-field-text: #171d1f;
-  --color-offwhite: #e1e1e1;
-  --color-muted: #bcbcbc;
+  /*
+   * Escala de tamanho: use o token padrão do Tailwind mais próximo
+   * (xs 12, sm 14, base 16, lg 18, xl 20, 2xl 24, 3xl 30, 4xl 36).
+   * Nada de text-[18px]: se o desenho pedir um tamanho fora da escala,
+   * fica com o vizinho mais próximo em vez de criar valor customizado.
+   */
+
+  /* Paleta do projeto: verde da marca */
+  --color-brand-50: #eaffe9;
+  --color-brand-100: #cbffcf;
+  --color-brand-200: #a4fca6;
+  --color-brand-300: #81fe88;
+  --color-brand-400: #5fea68;
+  --color-brand-500: #3fd153;
+  --color-brand-600: #28ae3a;
+  --color-brand-700: #228a31;
+  --color-brand-800: #216e2a;
+  --color-brand-900: #205b28;
+  --color-brand-950: #0b3314;
+
+  /* Paleta do projeto: neutros do fundo escuro */
+  --color-ink-50: #f7f8f8;
+  --color-ink-100: #e1e1e1;
+  --color-ink-200: #c9cbcb;
+  --color-ink-300: #bcbcbc;
+  --color-ink-400: #a3a6a6;
+  --color-ink-500: #888888;
+  --color-ink-600: #6c7070;
+  --color-ink-700: #4a4f50;
+  --color-ink-800: #2a3133;
+  --color-ink-900: #171d1f;
+  --color-ink-950: #00090e;
+
+  /*
+   * Papéis semânticos: apontam para a paleta acima.
+   * Hexadecimal só existe aqui, nunca dentro de uma classe no JSX.
+   */
+  --color-page: var(--color-ink-950);
+  --color-surface: var(--color-ink-900);
+  --color-accent: var(--color-brand-300);
+  --color-accent-contrast: #132e35;
+  --color-content: var(--color-ink-100);
+  --color-content-muted: var(--color-ink-300);
+  --color-content-subtle: var(--color-ink-500);
+  --color-field: var(--color-ink-500);
+  --color-field-text: var(--color-ink-900);
 }
 
 body {
-  @apply bg-page font-sans text-offwhite antialiased;
+  @apply bg-page font-sans text-content antialiased;
 }

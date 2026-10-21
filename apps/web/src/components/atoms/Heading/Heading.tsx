@@ -13,5 +13,5 @@ const styles = {
 
 export function Heading({ level = 1, children, className = '' }: HeadingProps) {
   const Tag = level === 1 ? 'h1' : 'h2'
-  return <Tag className={`text-offwhite ${styles[level]} ${className}`}>{children}</Tag>
+  return <Tag className={`text-content ${styles[level]} ${className}`}>{children}</Tag>
 }
