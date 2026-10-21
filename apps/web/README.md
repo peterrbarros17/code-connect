@@ -78,3 +78,32 @@ Levantados pela própria suíte (ver `pnpm web:test:a11y:report`):
 
 - **1.4.3** — o placeholder dos campos (`Input` com `placeholder:text-field-text/70`) fica em 3.10:1
   sobre o campo cinza `#888888`. O mínimo é 4.5:1 para texto normal.
+
+## SEO e descoberta por agentes de IA
+
+Arquivos estáticos de `public/`, servidos na raiz do site e copiados para `dist/` no build:
+
+| Arquivo | Endereço | Para quê |
+| --- | --- | --- |
+| `public/robots.txt` | `/robots.txt` | regras de rastreamento. Sem ele o servidor devolve o `index.html` e o Lighthouse reprova em `robots.txt is not valid` |
+| `public/llms.txt` | `/llms.txt` | resumo do site em Markdown para LLMs (H1 + links), audit `llms-txt` |
+| `public/.well-known/ai-catalog.json` | `/.well-known/ai-catalog.json` | manifesto ARD/`ai-catalog` (`specVersion` 1.0) |
+| `public/.well-known/ard.json` | `/.well-known/ard.json` | o mesmo manifesto no caminho atual da spec ARD |
+
+O `index.html` declara os dois manifests com `<link rel="ard">` e `<link rel="ai-catalog">` e
+traz o `<meta name="description">` usado pelo audit de meta description.
+
+> Os dois manifests têm o mesmo conteúdo de propósito: o Lighthouse 13.x só procura
+> `ai-catalog.json`, enquanto as versões mais recentes também aceitam `ard.json`. Ao alterar
+> um, replique no outro.
+
+### Rodando o Lighthouse
+
+```bash
+pnpm dlx lighthouse http://localhost:5173/login --view
+```
+
+O painel do DevTools roda em modo *snapshot*, que não coleta trace: a categoria Performance
+aparece como 0 mesmo com tudo certo. Meça Performance no modo *navigation* (CLI, como acima)
+e sempre contra o build de produção (`pnpm web:build` + `pnpm web:preview`), porque o dev
+server entrega o React sem minificar e infla o payload.
