@@ -1,12 +1,6 @@
 ---
-description: Convenções do app React com Vite em apps/web
-globs:
-  - apps/web/**/*.ts
-  - apps/web/**/*.tsx
-  - apps/web/**/*.css
-alwaysApply: false
+alwaysApply: true
 ---
-
 # Web (React 19 + Vite 8)
 
 Código em `apps/web/src`. `src/main.tsx` monta `<App />` em `#root` com `StrictMode`.
