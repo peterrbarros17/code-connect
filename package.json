@@ -7,6 +7,8 @@
     "web:build": "pnpm --filter web build",
     "web:lint": "pnpm --filter web lint",
     "web:test": "pnpm --filter web test",
+    "web:test:a11y": "pnpm --filter web test:a11y",
+    "web:test:a11y:report": "pnpm --filter web test:a11y:report",
     "web:preview": "pnpm --filter web preview",
     "api:build": "pnpm --filter api build",
     "api:format": "pnpm --filter api format",

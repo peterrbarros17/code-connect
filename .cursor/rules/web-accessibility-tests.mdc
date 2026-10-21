@@ -1,0 +1,28 @@
+---
+description: Testes automatizados de acessibilidade (WCAG 2.x nível AA)
+globs:
+  - apps/web/**/*.tsx
+alwaysApply: false
+---
+
+# Testes de acessibilidade
+
+Toda tela nova entra na suíte de acessibilidade do `web`. Runner: Playwright + `axe-core`, em `apps/web/e2e/a11y`. Script `test:a11y` em `apps/web` e atalho `web:test:a11y` na raiz.
+
+O axe-core é limitado aos níveis A e AA do WCAG 2.0, 2.1 e 2.2 (`wcag2a`, `wcag2aa`, `wcag21a`, `wcag21aa`, `wcag22aa`). Regra `best-practice` não entra: não é requisito do WCAG.
+
+O que a suíte cobre:
+
+- varredura axe em cada rota, em desktop, tablet e mobile, e nos estados de formulário (preenchido, erro de validação, campo focado)
+- contraste do texto e do `::placeholder` (WCAG 1.4.3) — o axe não lê placeholder nem `oklab()` do Tailwind v4
+- alcance de todos os controles pelo Tab, indicador de foco visível com 3:1 e foco não encoberto
+
+Ao criar uma tela:
+
+1. inclua a rota em `ROTAS` de `e2e/a11y/paginas.a11y.spec.ts` e de `e2e/a11y/estados.a11y.spec.ts`
+2. garanta um `h1` único, landmark `main` e nome acessível em todo controle
+3. rode `pnpm web:test:a11y` antes de abrir o PR
+
+Para levantar os problemas sem reprovar: `pnpm web:test:a11y:report`.
+
+O axe-core cobre cerca de 60% dos critérios do WCAG. O que fica para revisão manual: 1.4.1 (uso de cor), 2.4.6 (rótulos descritivos), 3.3.2 (instruções), 2.5.3 (nome do usuário) e o texto alternativo que depende do contexto.
