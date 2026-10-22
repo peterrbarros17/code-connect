@@ -1,2 +1,9 @@
 packages:
   - "apps/*"
+
+# bcrypt tem binding nativo: o script de build localiza o binário
+# pré-compilado da plataforma atual.
+allowBuilds:
+  bcrypt: true
+  # Telemetria de instalação do bcrypt, dispensável.
+  '@scarf/scarf': false

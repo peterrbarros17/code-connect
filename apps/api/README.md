@@ -1,3 +1,104 @@
+# Code Connect API
+
+API de autenticação do Code Connect. NestJS 12 (ESM), com Swagger, JWT,
+PostgreSQL e TypeORM. Os usuários são persistidos na tabela `users`; o schema
+é versionado por migrations que rodam no boot da aplicação.
+
+## Como rodar
+
+```bash
+pnpm install       # na raiz do monorepo
+pnpm db:up         # sobe o PostgreSQL em Docker
+pnpm api:dev       # http://localhost:3000
+```
+
+O `compose.yaml` da raiz sobe o Postgres na porta `5432` e usa o volume nomeado
+`postgres_data`, então os dados continuam existindo após reiniciar a API ou o
+container. Para parar sem apagar os dados, use `pnpm db:down`. Para apagar o
+volume e recriar o banco do zero, use `pnpm db:reset`.
+
+Variáveis de ambiente (copie `apps/api/.env.example` para `apps/api/.env`):
+
+| Variável | Padrão | Descrição |
+|---|---|---|
+| `PORT` | `3000` | Porta da API |
+| `JWT_SECRET` | chave de desenvolvimento | Segredo do JWT. Obrigatório em produção (mín. 32 caracteres) |
+| `JWT_EXPIRES_IN` | `1h` | Validade do access token (`30m`, `1h`, `7d` ou segundos) |
+| `WEB_ORIGIN` | `http://localhost:5173` | Origem permitida no CORS (várias separadas por vírgula) |
+| `DATABASE_HOST` | `localhost` | Host do PostgreSQL |
+| `DATABASE_PORT` | `5432` | Porta do PostgreSQL |
+| `DATABASE_USER` | `code_connect` | Usuário do banco |
+| `DATABASE_PASSWORD` | `code_connect` | Senha do banco |
+| `DATABASE_NAME` | `code_connect` | Nome do banco |
+
+Em produção, `DATABASE_HOST`, `DATABASE_USER`, `DATABASE_PASSWORD` e
+`DATABASE_NAME` são obrigatórios, sem os defaults de desenvolvimento.
+
+## Banco de dados
+
+- **TypeORM** mapeia a entidade `User` para a tabela `users`.
+- A migration inicial fica em `src/database/migrations/` e roda
+  automaticamente no boot (`migrationsRun: true`).
+- `synchronize` fica desligado: mudanças de schema devem entrar por migration.
+- A constraint única de `email` protege contra cadastros duplicados, inclusive
+  em requisições concorrentes. A violação (`23505`) vira `409 Conflict`.
+- O e-mail é normalizado para minúsculas antes de ser salvo e consultado.
+
+### Testes de integração
+
+Os testes e2e usam o banco `code_connect_test`, criado pelo script
+`docker/postgres/init/01-create-test-db.sql` na primeira inicialização do
+volume. Cada cenário limpa a tabela `users` antes de rodar. Se o volume já
+existia antes desse script, recrie-o com `pnpm db:reset`.
+
+## Endpoints
+
+| Método | Rota | Auth | Sucesso | Erros |
+|---|---|---|---|---|
+| `POST` | `/users` | não | `201` usuário criado | `400` dados inválidos · `409` e-mail duplicado |
+| `POST` | `/auth/login` | não | `200` access token + usuário | `400` dados inválidos · `401` credenciais inválidas |
+| `GET` | `/auth/me` | sim | `200` dados do usuário logado | `401` token ausente, inválido ou expirado |
+
+```bash
+# cadastrar
+curl -X POST http://localhost:3000/users \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Maria Souza","email":"maria.souza@email.com","password":"SenhaForte1"}'
+
+# login
+curl -X POST http://localhost:3000/auth/login \
+  -H 'Content-Type: application/json' \
+  -d '{"email":"maria.souza@email.com","password":"SenhaForte1"}'
+
+# dados do usuário logado
+curl http://localhost:3000/auth/me -H 'Authorization: Bearer <access_token>'
+```
+
+A senha nunca volta na resposta: o registro interno guarda apenas o hash
+bcrypt. O e-mail é normalizado para minúsculas e precisa ser único.
+
+## Swagger
+
+`http://localhost:3000/docs` documenta os bodies de entrada e de saída
+(`CreateUserDto`, `LoginDto`, `UserResponseDto`, `LoginResponseDto`), os status
+de erro e o esquema `Bearer` do Swagger UI. O JSON bruto fica em
+`http://localhost:3000/docs-json`.
+
+## Testes
+
+```bash
+pnpm api:test        # unitários (*.spec.ts), sem banco
+pnpm api:test:e2e    # e2e (test/*.e2e-spec.ts), requer o Postgres de teste
+```
+
+Os testes unitários usam um repositório fake em memória. Os e2e sobem o
+`AppModule` completo contra o `code_connect_test` e precisam do container
+rodando (`pnpm db:up`).
+
+---
+
+## NestJS
+
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
 </p>
