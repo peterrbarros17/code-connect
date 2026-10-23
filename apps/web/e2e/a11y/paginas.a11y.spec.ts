@@ -2,6 +2,8 @@ import { expect, openPage, test } from './support/fixtures.ts'
 import { expectNoWcagViolations } from './support/axe.ts'
 
 const ROTAS = [
+  { path: '/', nome: 'Feed' },
+  { path: '/posts/exemplo', nome: 'Detalhe do post' },
   { path: '/login', nome: 'Login' },
   { path: '/cadastro', nome: 'Cadastro' },
 ]

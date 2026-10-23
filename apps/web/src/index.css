@@ -49,6 +49,7 @@
   --color-content-subtle: var(--color-ink-500);
   --color-field: var(--color-ink-500);
   --color-field-text: var(--color-ink-900);
+  --color-danger: #ffb4b4;
 }
 
 body {

@@ -10,7 +10,7 @@ test.describe('estados interativos', () => {
   test('login com campos preenchidos não tem violações WCAG A/AA', async ({ page }, testInfo) => {
     await openPage(page, '/login')
 
-    await page.getByLabel('Email ou usuário').fill('usuario123')
+    await page.getByLabel('Email').fill('usuario123')
     await page.getByLabel('Senha').fill('segredo-secreto')
     await page.getByRole('checkbox', { name: 'Lembrar-me' }).check()
 
@@ -21,7 +21,7 @@ test.describe('estados interativos', () => {
     await openPage(page, '/login')
 
     await page.getByRole('button', { name: 'Login' }).click()
-    await expect(page.getByLabel('Email ou usuário')).toBeFocused()
+    await expect(page.getByLabel('Email')).toBeFocused()
 
     await expectNoWcagViolations(page, { context: '/login com erro de validação', testInfo })
   })
@@ -39,7 +39,7 @@ test.describe('estados interativos', () => {
   test('campo focado não tem violações WCAG A/AA', async ({ page }, testInfo) => {
     await openPage(page, '/login')
 
-    for (const campo of ['Email ou usuário', 'Senha']) {
+    for (const campo of ['Email', 'Senha']) {
       await page.getByLabel(campo).focus()
       await expectNoWcagViolations(page, { context: `/login com foco em "${campo}"`, testInfo })
     }

@@ -13,28 +13,35 @@ export type LoginFormValues = {
 }
 
 type LoginFormProps = {
-  onSubmit: (values: LoginFormValues) => void
+  onSubmit: (values: LoginFormValues) => void | Promise<void>
   forgotPasswordTo?: string
+  isSubmitting?: boolean
 }
 
-export function LoginForm({ onSubmit, forgotPasswordTo = '/esqueci-senha' }: LoginFormProps) {
+export function LoginForm({
+  onSubmit,
+  forgotPasswordTo = '/esqueci-senha',
+  isSubmitting = false,
+}: LoginFormProps) {
   const [identifier, setIdentifier] = useState('')
   const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    onSubmit({ identifier, password, remember })
+    void onSubmit({ identifier, password, remember })
   }
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
       <FormField
         id="login-identifier"
-        label="Email ou usuário"
-        placeholder="usuario123"
-        autoComplete="username"
+        label="Email"
+        type="email"
+        placeholder="voce@email.com"
+        autoComplete="email"
         required
+        disabled={isSubmitting}
         value={identifier}
         onChange={(event) => setIdentifier(event.target.value)}
       />
@@ -45,6 +52,7 @@ export function LoginForm({ onSubmit, forgotPasswordTo = '/esqueci-senha' }: Log
         placeholder="******"
         autoComplete="current-password"
         required
+        disabled={isSubmitting}
         value={password}
         onChange={(event) => setPassword(event.target.value)}
       />
@@ -52,12 +60,19 @@ export function LoginForm({ onSubmit, forgotPasswordTo = '/esqueci-senha' }: Log
         <Checkbox
           label="Lembrar-me"
           checked={remember}
+          disabled={isSubmitting}
           onChange={(event) => setRemember(event.target.checked)}
         />
         <TextLink to={forgotPasswordTo}>Esqueci a senha</TextLink>
       </div>
-      <Button type="submit" className="mt-6" icon={<Icon src="/icons/arrow-forward.svg" />}>
-        Login
+      <Button
+        type="submit"
+        className="mt-6"
+        disabled={isSubmitting}
+        aria-busy={isSubmitting}
+        icon={<Icon src="/icons/arrow-forward.svg" />}
+      >
+        {isSubmitting ? 'Entrando...' : 'Login'}
       </Button>
     </form>
   )

@@ -11,17 +11,18 @@ export type RegisterFormValues = {
 }
 
 type RegisterFormProps = {
-  onSubmit: (values: RegisterFormValues) => void
+  onSubmit: (values: RegisterFormValues) => void | Promise<void>
+  isSubmitting?: boolean
 }
 
-export function RegisterForm({ onSubmit }: RegisterFormProps) {
+export function RegisterForm({ onSubmit, isSubmitting = false }: RegisterFormProps) {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    onSubmit({ name, email, password })
+    void onSubmit({ name, email, password })
   }
 
   return (
@@ -32,6 +33,7 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
         placeholder="Nome completo"
         autoComplete="name"
         required
+        disabled={isSubmitting}
         value={name}
         onChange={(event) => setName(event.target.value)}
       />
@@ -42,6 +44,7 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
         placeholder="Digite seu email"
         autoComplete="email"
         required
+        disabled={isSubmitting}
         value={email}
         onChange={(event) => setEmail(event.target.value)}
       />
@@ -51,12 +54,20 @@ export function RegisterForm({ onSubmit }: RegisterFormProps) {
         type="password"
         placeholder="******"
         autoComplete="new-password"
+        minLength={8}
         required
+        disabled={isSubmitting}
         value={password}
         onChange={(event) => setPassword(event.target.value)}
       />
-      <Button type="submit" className="mt-6" icon={<Icon src="/icons/arrow-forward.svg" />}>
-        Cadastrar
+      <Button
+        type="submit"
+        className="mt-6"
+        disabled={isSubmitting}
+        aria-busy={isSubmitting}
+        icon={<Icon src="/icons/arrow-forward.svg" />}
+      >
+        {isSubmitting ? 'Cadastrando...' : 'Cadastrar'}
       </Button>
     </form>
   )

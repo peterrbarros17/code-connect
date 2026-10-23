@@ -1,0 +1,16 @@
+export const icons = {
+  accountCircle: '/Ícones/SVG/account_circle.svg',
+  arrowForward: '/icons/arrow-forward.svg',
+  assignment: '/icons/assignment.svg',
+  chat: '/Ícones/SVG/chat.svg',
+  close: '/Ícones/SVG/close (3).svg',
+  code: '/Ícones/SVG/code.svg',
+  feed: '/Ícones/SVG/feed.svg',
+  info: '/Ícones/SVG/info (1).svg',
+  like: '/Ícones/SVG/thumb_up.svg',
+  likeOutline: '/Ícones/SVG/thumb_up_outline.svg',
+  login: '/icons/login.svg',
+  logout: '/Ícones/SVG/logout.svg',
+  search: '/Ícones/SVG/search_large.svg',
+  share: '/Ícones/SVG/share.svg',
+} as const

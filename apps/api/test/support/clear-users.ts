@@ -9,5 +9,5 @@ import { DataSource } from 'typeorm';
 export async function clearUsersTable(app: INestApplication): Promise<void> {
   const dataSource = app.get<DataSource>(getDataSourceToken());
 
-  await dataSource.query('TRUNCATE TABLE "users"');
+  await dataSource.query('TRUNCATE TABLE "users" CASCADE');
 }

@@ -22,6 +22,7 @@
     "api:test:cov": "pnpm --filter api test:cov",
     "api:test:debug": "pnpm --filter api test:debug",
     "api:test:e2e": "pnpm --filter api test:e2e",
+    "api:seed": "pnpm --filter api seed",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
     "db:reset": "docker compose down -v"

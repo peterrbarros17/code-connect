@@ -31,6 +31,39 @@ If you are developing a production application, we recommend enabling type-aware
 
 See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
 
+## Integração com a API
+
+O app fala com o backend NestJS por HTTP usando `axios` (`apps/api`, Swagger em `/docs`).
+
+```bash
+cp apps/web/.env.example apps/web/.env.local   # VITE_API_URL, padrão http://localhost:3000
+pnpm db:up
+pnpm api:dev
+pnpm web:dev
+```
+
+| Arquivo | Papel |
+| --- | --- |
+| `src/services/api.ts` | instância do axios, `baseURL`, timeout, header `Authorization: Bearer` e normalização dos erros do Nest |
+| `src/services/auth.ts` | chamadas `POST /users`, `POST /auth/login` e `GET /auth/me` |
+| `src/services/auth-storage.ts` | access token, usuário e expiração em `localStorage` |
+| `src/contexts/AuthProvider.tsx` | estado da sessão, login, cadastro automático com login e logout |
+| `src/services/posts.ts` | feed, tags, detalhe, criação, curtidas, comentários e upload de miniatura |
+| `src/components/templates/MainLayout` | layout compartilhado pelo feed, detalhe e publicação (sidebar + nav mobile) |
+
+Rotas:
+
+| Rota | Acesso | Conteúdo |
+| --- | --- | --- |
+| `/` | público | feed com busca, filtros por tag e ordenação (`Recentes`/`Populares`) |
+| `/posts/:id` | público | detalhe, código, curtidas e comentários encadeados |
+| `/publicar` | sessão | criação de post, upload opcional de miniatura, tags e bloco de código |
+| `/login` · `/cadastro` | público | autenticação; redirecionam para `/` (ou para `location.state.from`) |
+
+Quem não está logado pode ler o feed e o detalhe, mas curtir/comentar leva ao login e o formulário
+de comentário vira um convite para entrar. Para testar o fluxo autenticado, rode `pnpm api:seed` e
+use `bia@codeconnect.dev` / `SenhaForte1`.
+
 ## Testes de acessibilidade (WCAG 2.x nível AA)
 
 Runner: Playwright + `axe-core`. Os testes ficam em `e2e/a11y` e rodam num Chromium real, com o Vite
@@ -74,10 +107,7 @@ seja varrida nos três tamanhos de tela e nos estados interativos.
 
 ### Problemas conhecidos
 
-Levantados pela própria suíte (ver `pnpm web:test:a11y:report`):
-
-- **1.4.3** — o placeholder dos campos (`Input` com `placeholder:text-field-text/70`) fica em 3.10:1
-  sobre o campo cinza `#888888`. O mínimo é 4.5:1 para texto normal.
+Nenhum no momento.
 
 ## SEO e descoberta por agentes de IA
 

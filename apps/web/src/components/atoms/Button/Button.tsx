@@ -1,14 +1,35 @@
 import type { ComponentProps, ReactNode } from 'react'
+import {
+  buttonClassName,
+  type ButtonSize,
+  type ButtonVariant,
+} from './buttonStyles.ts'
 
 type ButtonProps = ComponentProps<'button'> & {
   icon?: ReactNode
+  variant?: ButtonVariant
+  size?: ButtonSize
 }
 
-export function Button({ icon, children, type = 'button', className = '', ...props }: ButtonProps) {
+function hasWidth(className: string) {
+  return /(^|\s)w-/.test(className)
+}
+
+export function Button({
+  icon,
+  children,
+  type = 'button',
+  variant = 'primary',
+  size = 'md',
+  className = '',
+  ...props
+}: ButtonProps) {
+  const width = hasWidth(className) ? '' : 'w-full'
+
   return (
     <button
       type={type}
-      className={`flex w-full items-center justify-center gap-2 rounded bg-accent px-4 py-3 text-lg font-semibold text-accent-contrast transition hover:brightness-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
+      className={buttonClassName(variant, `${width} ${className}`, size)}
       {...props}
     >
       {children}

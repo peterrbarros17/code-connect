@@ -8,11 +8,17 @@ it('envia os valores digitados', async () => {
   render(<RegisterForm onSubmit={onSubmit} />)
   await user.type(screen.getByLabelText('Nome'), 'Ana Souza')
   await user.type(screen.getByLabelText('Email'), 'ana@email.com')
-  await user.type(screen.getByLabelText('Senha'), 'segredo')
+  await user.type(screen.getByLabelText('Senha'), 'segredo123')
   await user.click(screen.getByRole('button', { name: 'Cadastrar' }))
   expect(onSubmit).toHaveBeenCalledWith({
     name: 'Ana Souza',
     email: 'ana@email.com',
-    password: 'segredo',
+    password: 'segredo123',
   })
+})
+
+it('bloqueia o envio enquanto a requisição está em andamento', () => {
+  render(<RegisterForm onSubmit={vi.fn()} isSubmitting />)
+  expect(screen.getByRole('button', { name: 'Cadastrando...' })).toBeDisabled()
+  expect(screen.getByLabelText('Nome')).toBeDisabled()
 })

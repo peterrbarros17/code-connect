@@ -1,8 +1,9 @@
 # Code Connect API
 
-API de autenticação do Code Connect. NestJS 12 (ESM), com Swagger, JWT,
-PostgreSQL e TypeORM. Os usuários são persistidos na tabela `users`; o schema
-é versionado por migrations que rodam no boot da aplicação.
+API de autenticação e posts do Code Connect. NestJS 12 (ESM), com Swagger,
+JWT, PostgreSQL e TypeORM. Usuários, posts, curtidas e comentários são
+persistidos no PostgreSQL; o schema é versionado por migrations que rodam no
+boot da aplicação.
 
 ## Como rodar
 
@@ -10,6 +11,7 @@ PostgreSQL e TypeORM. Os usuários são persistidos na tabela `users`; o schema
 pnpm install       # na raiz do monorepo
 pnpm db:up         # sobe o PostgreSQL em Docker
 pnpm api:dev       # http://localhost:3000
+pnpm api:seed      # popula usuários e posts de demonstração (idempotente)
 ```
 
 O `compose.yaml` da raiz sobe o Postgres na porta `5432` e usa o volume nomeado
@@ -36,13 +38,31 @@ Em produção, `DATABASE_HOST`, `DATABASE_USER`, `DATABASE_PASSWORD` e
 
 ## Banco de dados
 
-- **TypeORM** mapeia a entidade `User` para a tabela `users`.
-- A migration inicial fica em `src/database/migrations/` e roda
-  automaticamente no boot (`migrationsRun: true`).
+- **TypeORM** mapeia `User`, `Post`, `PostLike` e `Comment` para `users`,
+  `posts`, `post_likes` e `post_comments`.
+- As migrations ficam em `src/database/migrations/` e rodam automaticamente no
+  boot (`migrationsRun: true`).
 - `synchronize` fica desligado: mudanças de schema devem entrar por migration.
 - A constraint única de `email` protege contra cadastros duplicados, inclusive
   em requisições concorrentes. A violação (`23505`) vira `409 Conflict`.
 - O e-mail é normalizado para minúsculas antes de ser salvo e consultado.
+- `posts.search_vector` é uma coluna gerada (`tsvector`, configuração
+  `portuguese`) com índice GIN. Tags também têm índice GIN para o filtro por
+  `tags @> :tags`.
+- Comentários aceitam apenas uma resposta de primeiro nível; respostas de uma
+  resposta recebem `400`.
+
+### Seed de demonstração
+
+`pnpm api:seed` compila a API, roda as migrations pendentes e popula dados de
+forma idempotente (IDs fixos, `ON CONFLICT`). Login de demonstração:
+
+```text
+bia@codeconnect.dev / SenhaForte1
+```
+
+Também são criados `caio@codeconnect.dev`, `lara@codeconnect.dev` e
+`davi@codeconnect.dev`, todos com a mesma senha.
 
 ### Testes de integração
 
@@ -58,6 +78,19 @@ existia antes desse script, recrie-o com `pnpm db:reset`.
 | `POST` | `/users` | não | `201` usuário criado | `400` dados inválidos · `409` e-mail duplicado |
 | `POST` | `/auth/login` | não | `200` access token + usuário | `400` dados inválidos · `401` credenciais inválidas |
 | `GET` | `/auth/me` | sim | `200` dados do usuário logado | `401` token ausente, inválido ou expirado |
+| `GET` | `/posts` | não | `200` lista paginada de posts | `400` filtros inválidos |
+| `GET` | `/posts/tags` | não | `200` tags com contagem | — |
+| `GET` | `/posts/:id` | não | `200` post + comentários | `400` id inválido · `404` post inexistente |
+| `POST` | `/posts` | sim | `201` post criado | `400` dados inválidos · `401` sem token |
+| `POST` | `/posts/thumbnail` | sim | `201` `{ url }` da imagem salva | `400` arquivo inválido · `401` sem token |
+| `POST` | `/posts/:id/likes` | sim | `201` curtida contabilizada | `401` sem token · `404` post inexistente |
+| `DELETE` | `/posts/:id/likes` | sim | `200` curtida removida | `401` sem token · `404` post inexistente |
+| `POST` | `/posts/:id/comments` | sim | `201` comentário/resposta criado | `400` resposta aninhada · `401` sem token |
+
+`GET /posts` aceita `search` (full-text), `tags` (separadas por vírgula ou
+repetidas), `sort=recent|popular`, `page` e `limit` (máximo 50). A miniaturas
+enviadas por upload ficam em `apps/api/uploads/posts/` e são servidas em
+`/uploads/posts/...`; a URL relativa é prefixada com `VITE_API_URL` no frontend.
 
 ```bash
 # cadastrar
@@ -80,7 +113,8 @@ bcrypt. O e-mail é normalizado para minúsculas e precisa ser único.
 ## Swagger
 
 `http://localhost:3000/docs` documenta os bodies de entrada e de saída
-(`CreateUserDto`, `LoginDto`, `UserResponseDto`, `LoginResponseDto`), os status
+(`CreateUserDto`, `LoginDto`, `UserResponseDto`, `LoginResponseDto`,
+`CreatePostDto`, `CreateCommentDto` e os DTOs de resposta de posts), os status
 de erro e o esquema `Bearer` do Swagger UI. O JSON bruto fica em
 `http://localhost:3000/docs-json`.
 
@@ -93,7 +127,8 @@ pnpm api:test:e2e    # e2e (test/*.e2e-spec.ts), requer o Postgres de teste
 
 Os testes unitários usam um repositório fake em memória. Os e2e sobem o
 `AppModule` completo contra o `code_connect_test` e precisam do container
-rodando (`pnpm db:up`).
+rodando (`pnpm db:up`). A suíte de posts cobre listagem pública, busca
+full-text, filtro de tags, criação, curtida, comentários e upload de miniatura.
 
 ---
 

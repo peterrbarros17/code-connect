@@ -49,6 +49,9 @@ lerna-debug.log*
 .temp
 .tmp
 
+# Uploads locais de desenvolvimento
+/uploads
+
 # Runtime data
 pids
 *.pid
